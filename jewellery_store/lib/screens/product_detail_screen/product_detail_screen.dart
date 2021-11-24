@@ -1,10 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:jewellery_store/common/api_url.dart';
+import 'package:jewellery_store/common/common_widgets.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:jewellery_store/common/image_url.dart';
 import 'package:get/get.dart';
 import 'package:jewellery_store/common/read_more_text.dart';
+import 'package:jewellery_store/controller/product_detail_screen_controller/product_detail_screen_controller.dart';
 import 'package:jewellery_store/screens/cart_screen/cart_screen.dart';
 
 import '../../models/product_detail_screen_model/review_model.dart';
@@ -17,6 +20,8 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  ProductDetailScreenController productDetailScreenController = Get.put(ProductDetailScreenController());
+
   int activeIndex = 0;
   bool viewMoreValue = false;
   int? activeColor;
@@ -81,38 +86,44 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         backgroundColor: Colors.black,
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Stack(
-                // alignment: Alignment.bottomRight,
-                overflow: Overflow.visible,
-                children: [
-                  carouselSlider(),
-                  Positioned(
-                    right: 15, bottom: -15,
-                      child: cartButton(),
+      body: Obx(
+        () => productDetailScreenController.isLoading.value
+            ? customCircularProgressIndicator()
+            : Padding(
+                padding: const EdgeInsets.all(10),
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Stack(
+                        // alignment: Alignment.bottomRight,
+
+                        clipBehavior: Clip.none,
+                        children: [
+                          carouselSlider(),
+                          Positioned(
+                            right: 15,
+                            bottom: -15,
+                            child: cartButton(),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      productDetail(),
+                      SizedBox(height: 20),
+                      review(),
+                    ],
                   ),
-                ],
+                ),
               ),
-              SizedBox(height: 20),
-              productDetail(),
-              SizedBox(height: 20),
-              review(),
-            ],
-          ),
-        ),
       ),
     );
   }
 
   Widget carouselSlider() {
     return CarouselSlider.builder(
-      itemCount: productImages.length,
+      itemCount: productDetailScreenController.productDetailLists.length,
       itemBuilder: (context, index, realIndex) {
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 5),
@@ -120,7 +131,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             borderRadius: BorderRadius.circular(15),
             color: Colors.white,
             image: DecorationImage(
-              image: AssetImage(productImages[index]),
+              image: NetworkImage(ApiUrl.ApiMainPath + "${productDetailScreenController.productDetailLists[0].images[index]}"),
               fit: BoxFit.cover,
             )
           ),
@@ -129,12 +140,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       options: CarouselOptions(
           height: Get.height * 0.25,
           autoPlay: true,
-          // autoPlayInterval: Duration(seconds: 3),
           viewportFraction: 1,
           onPageChanged: (index, reason) {
-            setState(() {
-              activeIndex = index;
-            });
+              productDetailScreenController.activeIndex.value = index;
           }),
     );
   }
@@ -169,7 +177,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Lorem ipsum dolor sit amet, consectetur',
+        Text('${productDetailScreenController.productDetailLists[0].productname}',
           textScaleFactor: 1.1,
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -199,7 +207,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         Row(
           children: [
             Text(
-              '\$200',
+              '\$${productDetailScreenController.productDetailLists[0].productcost}',
               textScaleFactor: 1.1,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -208,7 +216,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             SizedBox(width: 10),
             Text(
-              '\$210',
+              '\$${productDetailScreenController.productDetailLists[0].productcost}',
               textScaleFactor: 1.1,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -220,7 +228,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         SizedBox(height: 5),
         Container(
           child: ReadMoreText(
-            desText,
+            productDetailScreenController.productDetailLists[0].fullText,
             trimLines: 4,
             colorClickableText: CustomColor.kTealColor,
             trimMode: TrimMode.Line,
@@ -319,7 +327,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   fontSize: 15
                 ),
               ),
-              Text('1.0 cm',
+              Text('${productDetailScreenController.productDetailLists[0].width} cm',
               style: TextStyle(
                 fontSize: 15
               ),),
@@ -349,7 +357,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     fontSize: 15
                 ),
               ),
-              Text('18.0 Kg',
+              Text('${productDetailScreenController.productDetailLists[0].weight} Kg',
                 style: TextStyle(
                     fontSize: 15
                 ),),
