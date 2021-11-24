@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'custom_color.dart';
 import 'image_url.dart';
 
@@ -47,6 +48,20 @@ Widget orText() {
               endIndent: 30,
             )),
       ],
+    ),
+  );
+}
+
+Widget customCircularProgressIndicator() {
+  return Container(
+    width: Get.width,
+    height: Get.height,
+    color: Colors.transparent,
+    child: Center(
+      child: CircularProgressIndicator(
+        color: CustomColor.kTealColor,
+        backgroundColor: Colors.white,
+      ),
     ),
   );
 }

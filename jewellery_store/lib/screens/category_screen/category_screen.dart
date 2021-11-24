@@ -1,25 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jewellery_store/common/image_url.dart';
 import 'package:get/get.dart';
-import '../../models/category_screen_model/category_model.dart';
+import 'package:jewellery_store/common/api_url.dart';
+import 'package:jewellery_store/common/common_widgets.dart';
+import 'package:jewellery_store/controller/category_screen_controller/category_screen_controller.dart';
 
 class CategoryScreen extends StatelessWidget {
-  List<CategoryModel> categoryItems = [
-    CategoryModel(categoryImage: ImageUrl.category1, categoryName: 'Rings'),
-    CategoryModel(
-        categoryImage: ImageUrl.category2, categoryName: 'Necklace'),
-    CategoryModel(
-        categoryImage: ImageUrl.category3, categoryName: 'Couple Rings'),
-    CategoryModel(categoryImage: ImageUrl.category4, categoryName: 'Crown'),
-    CategoryModel(
-        categoryImage: ImageUrl.category5, categoryName: 'New Arrivals'),
-    CategoryModel(
-        categoryImage: ImageUrl.category6, categoryName: 'Bracelet'),
-    CategoryModel(categoryImage: ImageUrl.category1, categoryName: 'Rings'),
-    CategoryModel(
-        categoryImage: ImageUrl.category2, categoryName: 'Necklace'),
-  ];
+  CategoryScreenController categoryScreenController = Get.put(CategoryScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -29,75 +16,62 @@ class CategoryScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              itemCount: categoryItems.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    alignment: index % 2 == 0
-                        ? Alignment.centerLeft
-                        : Alignment.centerRight,
-                    children: [
-                      Container(
-                        height: 120,
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          image: DecorationImage(
-                            image:
-                                AssetImage(categoryItems[index].categoryImage),
+      body: Obx(
+        ()=> categoryScreenController.isLoading.value
+        ? customCircularProgressIndicator()
+        : Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                itemCount: categoryScreenController.categoryLists.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      alignment: index % 2 == 0
+                          ? Alignment.centerLeft
+                          : Alignment.centerRight,
+                      children: [
+                        Container(
+                          height: 120,
+                          width: Get.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            image: DecorationImage(
+                              image:
+                                  NetworkImage(
+                                    ApiUrl.ApiMainPath + "${categoryScreenController.categoryLists[index].showimg}",
+                                  ),
+                              fit: BoxFit.cover
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          categoryItems[index].categoryName,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                            fontSize: 17,
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            categoryScreenController.categoryLists[index].categoryName,
+                            textAlign: index % 2 == 0
+                                ? TextAlign.left
+                                : TextAlign.start,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              fontSize: 17,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget item() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 120,
-        width: Get.width,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(
-                image: AssetImage('categoryItems.categoryImage'))),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'categoryItems[index].categoryName',
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          ],
         ),
       ),
     );
   }
+
 }
