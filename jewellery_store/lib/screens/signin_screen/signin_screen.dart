@@ -1,73 +1,78 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jewellery_store/common/common_widgets.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:jewellery_store/common/image_url.dart';
+import 'package:jewellery_store/controller/signin_screen_controller/signin_screen_controller.dart';
 import 'package:jewellery_store/screens/signup_screen/signup_screen.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends StatelessWidget {
 
-  @override
-  _SignInScreenState createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
+  SignInScreenController signInScreenController = Get.put(SignInScreenController());
 
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              logo(),
-              SizedBox(height: 10),
-              signInText(),
-              SizedBox(height: 20),
-              Form(
-                key: formkey,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Column(
-                    children: [
-                      userNameField(),
-                      SizedBox(height: 10),
-                      passwordField(),
-                      SizedBox(height: 15),
-                      rememberPass(),
-                      SizedBox(height: 20),
-                      loginButton(context),
-                    ],
+      body: Obx(
+        ()=> signInScreenController.isLoading.value
+        ? Container(
+          width: Get.width,
+          height: Get.height,
+          color: Colors.transparent,
+          child: Center(
+            child: CircularProgressIndicator(
+              color: CustomColor.kTealColor,
+              backgroundColor: Colors.white,
+            ),
+          ),
+        )
+        : SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                logo(),
+                SizedBox(height: 10),
+                signInText(),
+                SizedBox(height: 20),
+                Form(
+                  key: formkey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      children: [
+                        emailIdField(),
+                        SizedBox(height: 10),
+                        passwordField(),
+                        SizedBox(height: 15),
+                        rememberPass(),
+                        SizedBox(height: 20),
+                        loginButton(context),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-              forgotPassword(),
-              SizedBox(height: 25),
-              signUpText(),
-              SizedBox(height: 20),
-              orText(),
-              SizedBox(height: 25),
-              socialButton(),
-            ],
+                SizedBox(height: 20),
+                forgotPassword(),
+                SizedBox(height: 25),
+                signUpText(),
+                SizedBox(height: 20),
+                orText(),
+                SizedBox(height: 25),
+                socialButton(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget logo() {
-    return Container(
-      height: 150, width: 150,
-      child: Image.asset(ImageUrl.logo),
-    );
-  }
 
   Widget signInText() {
     return Text(
@@ -81,22 +86,23 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget userNameField() {
+  Widget emailIdField() {
     return TextFormField(
       cursorColor: CustomColor.kTealColor,
-      keyboardType: TextInputType.emailAddress,
-      controller: userNameController,
+      controller: emailController,
       decoration: InputDecoration(
-        hintText: "UserName",
+        hintText: "Email Id",
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: CustomColor.kTealColor,
-          ),
-        ),
+            borderSide: BorderSide(
+              color: CustomColor.kTealColor,
+            )),
       ),
       validator: (value) {
-        if(value!.isEmpty){
-          return "UserName Should not be Empty";
+        if (value!.isEmpty) {
+          return "Email Should not be Empty";
+        }
+        if (!value.contains('@')) {
+          return 'Email should be Valid';
         }
       },
     );
@@ -124,33 +130,24 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget rememberPass() {
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          child: Row(
-            children: [
-              Checkbox(
-                activeColor: CustomColor.kTealColor,
-                checkColor: Colors.white,
-                value: isChecked,
-                onChanged: (bool? value) {
-                  setState(() {
-                    isChecked = value!;
-                    print(isChecked);
-                  });
-                },
-              ),
-              Text('Remember Password?',
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-              ),),
-            ],
+    return Obx(
+      ()=> Row(
+        children: [
+          Checkbox(
+            activeColor: CustomColor.kTealColor,
+            checkColor: Colors.white,
+            value: signInScreenController.isChecked.value,
+            onChanged: (bool? value) {
+                signInScreenController.isChecked.value = value!;
+                print(signInScreenController.isChecked.value);
+            },
           ),
-        ),
-
-      ],
+          Text('Remember Password?',
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+          ),),
+        ],
+      ),
     );
   }
 
@@ -161,9 +158,12 @@ class _SignInScreenState extends State<SignInScreen> {
       child: GestureDetector(
         onTap: () {
           if (formkey.currentState!.validate()) {
-            print('Inside formkey');
-            print('${userNameController.text.trim()}');
+            print('${emailController.text.trim()}');
             print('${passwordController.text.trim()}');
+            signInScreenController.getSignInData(
+              emailController.text.trim().toLowerCase(),
+                passwordController.text.trim(),
+            );
           }
         },
         child: Container(

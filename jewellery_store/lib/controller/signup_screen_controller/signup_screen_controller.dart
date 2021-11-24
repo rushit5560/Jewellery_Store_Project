@@ -26,6 +26,12 @@ class SignUpScreenController extends GetxController {
 
       http.Response response = await http.post(Uri.parse(url), body: data);
 
+      // When User SignUp Failed
+      if (response.body.contains('The email has already been taken')) {
+        print('Email Already Registered');
+        Get.snackbar('Error!', 'Email Already Registered');
+      }
+
       SignUpData signUpData = SignUpData.fromJson(json.decode(response.body));
       isStatus = signUpData.success.obs;
 
