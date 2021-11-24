@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jewellery_store/pages/category_page/category_page.dart';
-import 'package:jewellery_store/pages/collection_page/collection_page.dart';
-import 'package:jewellery_store/pages/contact_us_page/contactus_page.dart';
-import 'package:jewellery_store/pages/index_page/index_page.dart';
-import 'package:jewellery_store/pages/notification_page/notification_page.dart';
-import 'package:jewellery_store/pages/profile_page/profile_page.dart';
-import 'package:jewellery_store/pages/settings/settings_page.dart';
-import 'package:jewellery_store/pages/signin_page/signin_page.dart';
+import 'package:jewellery_store/screens/category_screen/category_screen.dart';
+import 'package:jewellery_store/screens/collection_screen/collection_screen.dart';
+import 'package:jewellery_store/screens/contact_us_screen/contactus_screen.dart';
+import 'package:jewellery_store/screens/index_screen/index_screen.dart';
+import 'package:jewellery_store/screens/notification_screen/notification_screen.dart';
+import 'package:jewellery_store/screens/profile_screen/profile_screen.dart';
+import 'package:jewellery_store/screens/settings_screen/settings_screen.dart';
+import 'package:jewellery_store/screens/signin_screen/signin_screen.dart';
 import 'image_url.dart';
 import 'custom_color.dart';
 
@@ -120,7 +120,7 @@ class CustomDrawer extends StatelessWidget {
     return ListTile(
       onTap: () {
         Get.back();
-        Get.off(IndexPage());
+        Get.off(()=> IndexScreen());
       },
       leading: Icon(Icons.home_outlined,color: Colors.black,),
       title: Text('Home',
@@ -134,7 +134,7 @@ class CustomDrawer extends StatelessWidget {
     return ListTile(
       onTap: () {
         Get.back();
-        Get.to(CategoryPage());
+        Get.to(()=> CategoryScreen());
       },
       leading: Icon(Icons.category_outlined,color: Colors.black,),
       title: Text('Categories',
@@ -148,7 +148,7 @@ class CustomDrawer extends StatelessWidget {
     return ListTile(
       onTap: () {
         Get.back();
-        Get.to(CollectionPage());
+        Get.to(()=> CollectionScreen());
       },
       leading: Icon(Icons.storefront_outlined,color: Colors.black,),
       title: Text('Collection',
@@ -162,7 +162,7 @@ class CustomDrawer extends StatelessWidget {
     return ListTile(
       onTap: () {
         Get.back();
-        Get.to(SettingsPage());
+        Get.to(()=> SettingsScreen());
       },
       leading: Icon(Icons.settings_outlined,color: Colors.black,),
       title: Text('Settings',
@@ -176,7 +176,7 @@ class CustomDrawer extends StatelessWidget {
     return ListTile(
       onTap: () {
         Get.back();
-        Get.to(NotificationPage());
+        Get.to(()=> NotificationScreen());
       },
       leading: Icon(Icons.notifications_on_outlined,color: Colors.black,),
       title: Text('Notification',
@@ -190,7 +190,7 @@ class CustomDrawer extends StatelessWidget {
     return ListTile(
       onTap: () {
         Get.back();
-        Get.to(ProfilePage());
+        Get.to(()=> ProfileScreen());
       },
       leading: Icon(Icons.person_outline_outlined,color: Colors.black,),
       title: Text('Profile',
@@ -204,7 +204,7 @@ class CustomDrawer extends StatelessWidget {
     return ListTile(
       onTap: () {
         Get.back();
-        Get.to(ContactUsPage());
+        Get.to(()=> ContactUsScreen());
       },
       leading: Icon(Icons.contact_phone_outlined,color: Colors.black,),
       title: Text('Contact Us',
@@ -219,7 +219,7 @@ class CustomDrawer extends StatelessWidget {
       child: ListTile(
         onTap: () {
           Get.back();
-          Get.to(SignInPage());
+          Get.to(()=> SignInScreen());
         },
         leading: Icon(Icons.login_outlined,color: Colors.black,),
         title: Text('LogIn',

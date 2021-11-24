@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jewellery_store/common/custom_color.dart';
-import 'package:jewellery_store/pages/index_page/index_page.dart';
+import 'package:jewellery_store/screens/splash_screen/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      home: IndexPage(),
+      home: SplashScreen(),
     );
   }
 }
