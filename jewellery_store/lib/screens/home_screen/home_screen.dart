@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:jewellery_store/common/api_url.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:jewellery_store/common/custom_drawer.dart';
 import 'package:jewellery_store/common/image_url.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:jewellery_store/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:jewellery_store/screens/category_screen/category_screen.dart';
 import 'package:jewellery_store/screens/product_detail_screen/product_detail_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -16,14 +18,16 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-
 class _HomeScreenState extends State<HomeScreen> {
-  int activeIndex = 0;
-  final imgList = [
-    ImageUrl.banner1,
-    ImageUrl.banner2,
-    ImageUrl.banner3,
-  ];
+
+  HomeScreenController homeScreenController = Get.put(HomeScreenController());
+
+  // int activeIndex = 0;
+  // final imgList = [
+  //   ImageUrl.banner1,
+  //   ImageUrl.banner2,
+  //   ImageUrl.banner3,
+  // ];
   final mainCategoryImg = [
     ImageUrl.mainlist1,
     ImageUrl.mainlist2,
@@ -84,68 +88,84 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Image(
-          image: AssetImage(ImageUrl.logo2),
-        ),
-        backgroundColor: Colors.black,
-        actions: [
-          IconButton(
-            onPressed: () {
-              print('Clicked On Search');
-            },
-            icon: Icon(Icons.search_rounded, size: 20),
-            color: Colors.white,
-          ),
-        ],
-      ),
-      drawer: CustomDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.centerRight,
-                children: [
-                  carouselSlider(),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 12, top: 5, bottom: 5),
-                    child: carouselIndicator(),
+    return Obx(
+      () => homeScreenController.isLoading.value
+          ? Container(
+              width: Get.width,
+              height: Get.height,
+              color: Colors.transparent,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: CustomColor.kTealColor,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            )
+          : Scaffold(
+              appBar: AppBar(
+                title: Image(
+                  image: AssetImage(ImageUrl.logo2),
+                ),
+                backgroundColor: Colors.black,
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      print('Clicked On Search');
+                    },
+                    icon: Icon(Icons.search_rounded, size: 20),
+                    color: Colors.white,
                   ),
                 ],
               ),
-              SizedBox(height: 10),
-              mainList(),
-              SizedBox(height: 10),
-              homeList(),
-            ],
-          ),
-        ),
-      ),
+              drawer: CustomDrawer(),
+              body: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          carouselSlider(),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: 12, top: 5, bottom: 5),
+                            child: carouselIndicator(),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      mainList(),
+                      SizedBox(height: 10),
+                      homeList(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
     );
   }
 
   Widget carouselSlider() {
-    return CarouselSlider.builder(
-      itemCount: imgList.length,
-      itemBuilder: (context, index, realIndex) {
-        final imgUrl = imgList[index];
-        return buildImage(imgUrl, index);
-      },
-      options: CarouselOptions(
-          height: 160,
-          autoPlay: true,
-          scrollDirection: Axis.vertical,
-          viewportFraction: 1,
-          onPageChanged: (index, reason) {
-            setState(() {
-              activeIndex = index;
-            });
-          }),
+    return Obx(
+      ()=> CarouselSlider.builder(
+        itemCount: homeScreenController.bannerLists.length,
+        itemBuilder: (context, index, realIndex) {
+          final imgUrl = ApiUrl.ApiMainPath + '${homeScreenController.bannerLists[index].imagePath}';
+          return buildImage(imgUrl, index);
+        },
+        options: CarouselOptions(
+            height: 160,
+            autoPlay: true,
+            // scrollDirection: Axis.vertical,
+            viewportFraction: 1,
+            onPageChanged: (index, reason) {
+              setState(() {
+                homeScreenController.activeIndex.value = index;
+              });
+            }),
+      ),
     );
   }
 
@@ -156,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(10),
         color: Colors.grey,
         image: DecorationImage(
-          image: AssetImage(urlImage),
+          image: NetworkImage(urlImage),
           fit: BoxFit.cover,
         ),
       ),
@@ -164,16 +184,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Widget carouselIndicator() {
+  //   return Obx(
+  //     ()=> AnimatedSmoothIndicator(
+  //       activeIndex: homeScreenController.activeIndex.value,
+  //       count: homeScreenController.bannerLists.length,
+  //       axisDirection: Axis.vertical,
+  //       effect: WormEffect(
+  //         dotHeight: 11,
+  //         dotWidth: 11,
+  //         activeDotColor: CustomColor.kTealColor,
+  //         dotColor: Colors.white,
+  //       ),
+  //     ),
+  //   );
+  // }
+
   Widget carouselIndicator() {
-    return AnimatedSmoothIndicator(
-      activeIndex: activeIndex,
-      count: imgList.length,
-      axisDirection: Axis.vertical,
-      effect: WormEffect(
-        dotHeight: 11,
-        dotWidth: 11,
-        activeDotColor: CustomColor.kTealColor,
-        dotColor: Colors.white,
+    return Obx(
+          () => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          homeScreenController.bannerLists.length,
+              (index) => Container(
+            margin: EdgeInsets.all(4),
+            width: 11,
+            height: 11,
+            decoration: BoxDecoration(
+              color: homeScreenController.activeIndex.value == index
+                  ? CustomColor.kOrangeColor
+                  : Colors.black,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -191,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(5),
             child: GestureDetector(
               onTap: () {
-                Get.to(()=> CategoryScreen());
+                Get.to(() => CategoryScreen());
               },
               child: Container(
                 height: 80,
@@ -223,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(()=> ProductDetailScreen());
+                  Get.to(() => ProductDetailScreen());
                   print('Clicked    1');
                 },
                 child: Row(
@@ -304,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.all(8),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(()=> ProductDetailScreen());
+                  Get.to(() => ProductDetailScreen());
                   print('Clicked    2');
                 },
                 child: Row(
