@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jewellery_store/common/common_functions.dart';
+import 'package:jewellery_store/common/common_widgets.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:jewellery_store/common/image_url.dart';
+import 'package:jewellery_store/controller/signup_screen_controller/signup_screen_controller.dart';
 import 'package:jewellery_store/screens/signin_screen/signin_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
-
+  SignUpScreenController signUpScreenController =
+      Get.put(SignUpScreenController());
 
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
@@ -14,78 +18,76 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              logo(),
-              SizedBox(height: 10),
-              signUpText(),
-              SizedBox(height: 20),
-              Form(
-                key: formkey,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Column(
-                    children: [
-                      userNameField(),
-                      SizedBox(height: 10),
-                      emailIdField(),
-                      SizedBox(height: 10),
-                      passwordField(),
-                      SizedBox(height: 25),
-                      signUpButton(context),
-                    ],
+    return GestureDetector(
+      onTap: () => CommonFunctions().hideKeyBoard(context),
+      child: Scaffold(
+        body: Obx(
+          () => signUpScreenController.isLoading.value
+              ? Container(
+                  width: Get.width,
+                  height: Get.height,
+                  color: Colors.transparent,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: CustomColor.kTealColor,
+                      backgroundColor: Colors.white,
+                    ),
+                  ),
+                )
+              : SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        logo(), // Import From Common Widgets
+                        SizedBox(height: 10),
+                        signUpText(), // Import From Common Widgets
+                        SizedBox(height: 20),
+                        Form(
+                          key: formkey,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Column(
+                              children: [
+                                userNameField(),
+                                SizedBox(height: 10),
+                                emailIdField(),
+                                SizedBox(height: 10),
+                                passwordField(),
+                                SizedBox(height: 25),
+                                signUpButton(context),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 25),
+                        signInText(),
+                        SizedBox(height: 20),
+                        orText(), // Import From Common Widgets
+                        SizedBox(height: 25),
+                        socialButton(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 25),
-              signInText(),
-              SizedBox(height: 20),
-              orText(),
-              SizedBox(height: 25),
-              socialButton(),
-            ],
-          ),
         ),
       ),
     );
   }
-  Widget logo() {
-    return Container(
-      height: 150, width: 150,
-      child: Image.asset(ImageUrl.logo),
-    );
-  }
 
-  Widget signUpText() {
-    return Text(
-      "Sign Up",
-      style: TextStyle(
-        color: CustomColor.kTealColor,
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-      ),
-      // textScaleFactor: 1.5,
-    );
-  }
 
   Widget userNameField() {
     return TextFormField(
       cursorColor: CustomColor.kTealColor,
-
       controller: userNameController,
       decoration: InputDecoration(
         hintText: "UserName",
         focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: CustomColor.kTealColor,
-            )
-        ),
+          color: CustomColor.kTealColor,
+        )),
       ),
       validator: (value) {
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "UserName Should not be Empty";
         }
       },
@@ -95,21 +97,19 @@ class SignUpScreen extends StatelessWidget {
   Widget emailIdField() {
     return TextFormField(
       cursorColor: CustomColor.kTealColor,
-
       controller: emailController,
       decoration: InputDecoration(
         hintText: "Email Id",
         focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: CustomColor.kTealColor,
-            )
-        ),
+          color: CustomColor.kTealColor,
+        )),
       ),
       validator: (value) {
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "Email Should not be Empty";
         }
-        if(!value.contains('@')){
+        if (!value.contains('@')) {
           return 'Email should be Valid';
         }
       },
@@ -125,12 +125,11 @@ class SignUpScreen extends StatelessWidget {
         hintText: "Password",
         focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: CustomColor.kTealColor,
-            )
-        ),
+          color: CustomColor.kTealColor,
+        )),
       ),
       validator: (value) {
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "Password Should not be Empty";
         }
       },
@@ -138,34 +137,36 @@ class SignUpScreen extends StatelessWidget {
   }
 
   Widget signUpButton(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
-
     return Container(
       child: GestureDetector(
         onTap: () {
           if (formkey.currentState!.validate()) {
-            print('Inside formkey');
             print('${userNameController.text.trim()}');
             print('${emailController.text.trim()}');
             print('${passwordController.text.trim()}');
+            signUpScreenController.getRegisterData(
+                userNameController.text.trim(),
+                emailController.text.trim().toLowerCase(),
+                passwordController.text.trim(),
+            );
           }
         },
         child: Container(
-          width: deviceWidth,
+          width: Get.width,
           decoration: BoxDecoration(
               color: CustomColor.kTealColor,
               borderRadius: BorderRadius.circular(25)),
           child: Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                ),
-              )),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              'Sign Up',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+            ),
+          )),
         ),
       ),
     );
@@ -181,46 +182,21 @@ class SignUpScreen extends StatelessWidget {
           SizedBox(width: 10),
           GestureDetector(
             onTap: () {
-              Get.off(()=> SignInScreen());
+              Get.off(() => SignInScreen());
             },
-            child: Text('Sign In',
+            child: Text(
+              'Sign In',
               style: TextStyle(
                 decoration: TextDecoration.underline,
-              ),),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget orText() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-              child: Divider(
-                thickness: 1,
-                color: CustomColor.kTealColor,
-                endIndent: 15,
-                indent: 30,
-              )),
-          Text(
-            'OR',
-            style: TextStyle(color: Colors.white, fontSize: 17),
-          ),
-          Expanded(
-              child: Divider(
-                thickness: 1,
-                color: CustomColor.kTealColor,
-                indent: 15,
-                endIndent: 30,
-              )),
-        ],
-      ),
-    );
-  }
+
 
   Widget socialButton() {
     return Padding(
@@ -229,7 +205,9 @@ class SignUpScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () {print('Clicked On Facebook');},
+            onTap: () {
+              print('Clicked On Facebook');
+            },
             child: Image.asset(
               ImageUrl.facebook,
               fit: BoxFit.cover,
@@ -239,7 +217,9 @@ class SignUpScreen extends StatelessWidget {
           ),
           SizedBox(width: 10),
           GestureDetector(
-            onTap: () {print('Clicked On Twitter');},
+            onTap: () {
+              print('Clicked On Twitter');
+            },
             child: Image.asset(
               ImageUrl.twitter,
               fit: BoxFit.cover,
@@ -249,7 +229,9 @@ class SignUpScreen extends StatelessWidget {
           ),
           SizedBox(width: 10),
           GestureDetector(
-            onTap: () {print('Clicked On Google');},
+            onTap: () {
+              print('Clicked On Google');
+            },
             child: Image.asset(
               ImageUrl.google,
               fit: BoxFit.cover,

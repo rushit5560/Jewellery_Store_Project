@@ -36,6 +36,7 @@ dependencies:
   smooth_page_indicator: ^0.3.0-nullsafety.0
   image_picker: ^0.7.0-nullsafety
   url_launcher: ^6.0.9
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:
