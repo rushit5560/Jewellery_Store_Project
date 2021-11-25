@@ -5,6 +5,7 @@ import 'package:jewellery_store/common/api_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:jewellery_store/models/cart_screen_model/add_cart_qty.dart';
 import 'package:jewellery_store/models/cart_screen_model/cart_model.dart';
+import 'package:jewellery_store/models/cart_screen_model/delete_cart_product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartScreenController extends GetxController {
@@ -66,6 +67,29 @@ class CartScreenController extends GetxController {
       }
     } catch(e) {
       print('Add Product Qty Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  getDeleteProductCart(cartDetailId) async {
+    isLoading(true);
+    String url = ApiUrl.DeleteCartProductApi;
+    print('Url : $url');
+
+    try {
+      Map data = {"id": "$cartDetailId"};
+      http.Response response = await http.post(Uri.parse(url), body: data);
+      DeleteCartProductData deleteCartProductData =
+          DeleteCartProductData.fromJson(json.decode(response.body));
+      isStatus = deleteCartProductData.success.obs;
+      if (isStatus.value) {
+        Get.snackbar('Successfully Deleted Cart Item', '');
+      } else {
+        print('DeleteCartProductData False False');
+      }
+    } catch (e) {
+      print('DeleteCartProductData Error : $e');
     } finally {
       isLoading(false);
     }

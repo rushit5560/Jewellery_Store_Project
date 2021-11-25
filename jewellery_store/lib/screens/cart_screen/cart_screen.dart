@@ -17,6 +17,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    cartScreenController.getUserDetailsFromPrefs();
     return Scaffold(
       appBar: AppBar(
         title: Text('Cart'),
@@ -202,7 +203,11 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            var cartDetailId = cartScreenController.userCartProductLists[index].cartDetailId;
+                            cartScreenController.getDeleteProductCart(cartDetailId);
+                            cartScreenController.getUserDetailsFromPrefs();
+                          },
                           icon: Icon(Icons.delete_rounded),
                           color: Colors.red,
                         ),
