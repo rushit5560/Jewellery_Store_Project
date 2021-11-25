@@ -8,8 +8,6 @@ import 'package:jewellery_store/common/image_url.dart';
 import 'package:get/get.dart';
 import 'package:jewellery_store/common/read_more_text.dart';
 import 'package:jewellery_store/controller/product_detail_screen_controller/product_detail_screen_controller.dart';
-import 'package:jewellery_store/screens/cart_screen/cart_screen.dart';
-
 import '../../models/product_detail_screen_model/review_model.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -160,8 +158,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           child: Center(
             child: IconButton(
               onPressed: () {
-                Get.to(()=> CartScreen());
-                print('Cart Button Clicked');
+                if(productDetailScreenController.userId == null){
+                  Get.snackbar('Title', 'Login Required');
+                } else {
+                  productDetailScreenController.productAddToCart();
+                }
               },
               icon: Icon(Icons.shopping_cart_rounded,size: 20,),
               color: Colors.black,
