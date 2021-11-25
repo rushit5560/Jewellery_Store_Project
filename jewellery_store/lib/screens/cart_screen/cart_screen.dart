@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jewellery_store/common/api_url.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:get/get.dart';
-import 'package:jewellery_store/common/image_url.dart';
+import 'package:jewellery_store/controller/cart_screen_controller/cart_screen_controller.dart';
 import 'package:jewellery_store/screens/checkout_screen/checkout_screen.dart';
-import '../../models/cart_screen_model/cart_model.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -14,33 +14,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  CartScreenController cartScreenController = Get.put(CartScreenController());
 
-  List<SingleCartItem> cartItems = [
-    SingleCartItem(
-      productImgUrl: ImageUrl.cart1,
-      productname: 'Product Name',
-      activeAmount: '200',
-      inactiveAmount: '250',
-    ),
-    SingleCartItem(
-      productImgUrl: ImageUrl.cart2,
-      productname: 'Product Name',
-      activeAmount: '200',
-      inactiveAmount: '250',
-    ),
-    SingleCartItem(
-      productImgUrl: ImageUrl.cart3,
-      productname: 'Product Name',
-      activeAmount: '200',
-      inactiveAmount: '250',
-    ),
-    SingleCartItem(
-      productImgUrl: ImageUrl.cart4,
-      productname: 'Product Name',
-      activeAmount: '200',
-      inactiveAmount: '250',
-    ),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +49,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget cartItemsList() {
     return Container(
       child: ListView.builder(
-        itemCount: cartItems.length,
+        itemCount: cartScreenController.userCartProductLists.length,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
@@ -85,7 +60,7 @@ class _CartScreenState extends State<CartScreen> {
               elevation: 10,
               child: Container(
                 child: Stack(
-                  overflow: Overflow.visible,
+                  clipBehavior: Clip.none,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,8 +77,9 @@ class _CartScreenState extends State<CartScreen> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       image: DecorationImage(
-                                        image: AssetImage(
-                                            cartItems[index].productImgUrl),
+                                        image: NetworkImage(
+                                            ApiUrl.ApiMainPath + "${cartScreenController.userCartProductLists[index].showimg}"
+                                        ),
                                         fit: BoxFit.cover,
                                       )),
                                 ),
@@ -114,7 +90,7 @@ class _CartScreenState extends State<CartScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      cartItems[index].productname,
+                                      cartScreenController.userCartProductLists[index].productname,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -126,7 +102,7 @@ class _CartScreenState extends State<CartScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                          '\$${cartItems[index].activeAmount}',
+                                          '\$${cartScreenController.userCartProductLists[index].productcost}',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: CustomColor.kTealColor,
@@ -134,7 +110,7 @@ class _CartScreenState extends State<CartScreen> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          '\$${cartItems[index].inactiveAmount}',
+                                          '\$${cartScreenController.userCartProductLists[index].productcost}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
