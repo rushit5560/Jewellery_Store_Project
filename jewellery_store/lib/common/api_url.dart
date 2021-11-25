@@ -1,5 +1,3 @@
-
-
 class ApiUrl {
   static const ApiMainPath = 'https://ecomsport.omdemo.co.in/';
 
@@ -14,4 +12,8 @@ class ApiUrl {
   static const AddCartQtyApi = ApiMainPath + 'api/addcartqty';
   static const DeleteCartProductApi = ApiMainPath + 'api/deletecart';
   static const FeaturedProductApi = ApiMainPath + 'api/productfeatured';
+
+  static const ProductReviewApi = ApiMainPath + 'api/reviewget';
+  static const AddProductReviewApi = ApiMainPath + 'api/reviewadd';
+  static const UserProfileApi = ApiMainPath + 'api/userprofile';
 }

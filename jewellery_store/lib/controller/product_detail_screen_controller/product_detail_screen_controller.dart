@@ -45,7 +45,6 @@ class ProductDetailScreenController extends GetxController {
     }
   }
 
-
   productAddToCart() async {
     isLoading(true);
     String url = ApiUrl.AddToCartApi;
@@ -73,6 +72,20 @@ class ProductDetailScreenController extends GetxController {
       }
     } catch(e){
       print('Product Add To Cart Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  getProductReview() async {
+    isLoading(true);
+    String url = ApiUrl.ProductReviewApi;
+    print('Url : $url');
+
+    try{
+
+    } catch(e){
+      print('Product Review Error : $e');
     } finally {
       isLoading(false);
     }

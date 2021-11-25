@@ -18,61 +18,62 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  ProductDetailScreenController productDetailScreenController = Get.put(ProductDetailScreenController());
+  ProductDetailScreenController productDetailScreenController =
+      Get.put(ProductDetailScreenController());
 
-  int activeIndex = 0;
   bool viewMoreValue = false;
   int? activeColor;
-
-  final productImages = [
-    ImageUrl.product1,
-    ImageUrl.product2,
-    ImageUrl.product3,
-  ];
-  String desText =
-      'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD, 120Hz Refresh Rate, IPS-level Anti-Glare Panel, 100% DCI-P3, Pantone Validated Graphics: Dedicated NVIDIA GeForce RTX 3060 GDDR6 6GB VRAM, With ROG Boost up to 1382MHz at 60W TGP + 20W with Dynamic Boost';
 
   List<ReviewInfo> reviewList = [
     ReviewInfo(
       imgUrl: ImageUrl.profile,
       userName: 'Tokyo',
       stars: '4',
-      description: 'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+      description:
+          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
     ),
     ReviewInfo(
       imgUrl: ImageUrl.profile,
       userName: 'Arturito',
       stars: '4.5',
-      description: 'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+      description:
+          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
     ),
     ReviewInfo(
       imgUrl: ImageUrl.profile,
       userName: 'Berline',
       stars: '4.5',
-      description: 'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+      description:
+          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
     ),
     ReviewInfo(
       imgUrl: ImageUrl.profile,
       userName: 'Neirobi',
       stars: '4.5',
-      description: 'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+      description:
+          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
     ),
     ReviewInfo(
       imgUrl: ImageUrl.profile,
       userName: 'Tokyo',
       stars: '4',
-      description: 'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+      description:
+          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
     ),
     ReviewInfo(
       imgUrl: ImageUrl.profile,
       userName: 'Tokyo',
       stars: '4',
-      description: 'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+      description:
+          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
     ),
   ];
 
   List<Color> colorList = [
-    Colors.blue, Colors.red, Colors.lightGreenAccent, Colors.orangeAccent,
+    Colors.blue,
+    Colors.red,
+    Colors.lightGreenAccent,
+    Colors.orangeAccent,
   ];
 
   @override
@@ -83,7 +84,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-
       body: Obx(
         () => productDetailScreenController.isLoading.value
             ? customCircularProgressIndicator()
@@ -126,13 +126,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 5),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Colors.white,
-            image: DecorationImage(
-              image: NetworkImage(ApiUrl.ApiMainPath + "${productDetailScreenController.productDetailLists[0].images[index]}"),
-              fit: BoxFit.cover,
-            )
-          ),
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+              image: DecorationImage(
+                image: NetworkImage(ApiUrl.ApiMainPath +
+                    "${productDetailScreenController.productDetailLists[0].images[index]}"),
+                fit: BoxFit.cover,
+              )),
         );
       },
       options: CarouselOptions(
@@ -140,7 +140,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           autoPlay: true,
           viewportFraction: 1,
           onPageChanged: (index, reason) {
-              productDetailScreenController.activeIndex.value = index;
+            productDetailScreenController.activeIndex.value = index;
           }),
     );
   }
@@ -158,15 +158,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           child: Center(
             child: IconButton(
               onPressed: () {
-                if(productDetailScreenController.userId == null){
+                if (productDetailScreenController.userId == null) {
                   Get.snackbar('Title', 'Login Required');
                 } else {
                   productDetailScreenController.productAddToCart();
                 }
               },
-              icon: Icon(Icons.shopping_cart_rounded,size: 20,),
+              icon: Icon(
+                Icons.shopping_cart_rounded,
+                size: 20,
+              ),
               color: Colors.black,
-
             ),
           ),
         ),
@@ -178,7 +180,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('${productDetailScreenController.productDetailLists[0].productname}',
+        Text(
+          '${productDetailScreenController.productDetailLists[0].productname}',
           textScaleFactor: 1.1,
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -258,12 +261,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               Text(
                 'Color',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-
               Container(
                 height: 20,
                 width: Get.width * 0.45,
@@ -284,17 +283,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           });
                         },
                         child: Container(
-                          padding: activeColor == index ?  EdgeInsets.all(2) : EdgeInsets.all(0),
+                          padding: activeColor == index
+                              ? EdgeInsets.all(2)
+                              : EdgeInsets.all(0),
                           decoration: BoxDecoration(
                             color: CustomColor.kTealColor,
                             shape: BoxShape.circle,
                           ),
                           child: Container(
-                            width: 20, height: 20,
+                            width: 20,
+                            height: 20,
                             decoration: BoxDecoration(
-                              color: colorList[index],
-                              shape: BoxShape.circle
-                            ),
+                                color: colorList[index],
+                                shape: BoxShape.circle),
                           ),
                         ),
                       ),
@@ -322,16 +323,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                  'Width',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15
-                ),
+                'Width',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-              Text('${productDetailScreenController.productDetailLists[0].width} cm',
-              style: TextStyle(
-                fontSize: 15
-              ),),
+              Text(
+                '${productDetailScreenController.productDetailLists[0].width} cm',
+                style: TextStyle(fontSize: 15),
+              ),
             ],
           ),
         ),
@@ -353,15 +351,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               Text(
                 'Weight',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-              Text('${productDetailScreenController.productDetailLists[0].weight} Kg',
-                style: TextStyle(
-                    fontSize: 15
-                ),),
+              Text(
+                '${productDetailScreenController.productDetailLists[0].weight} Kg',
+                style: TextStyle(fontSize: 15),
+              ),
             ],
           ),
         ),
@@ -383,22 +378,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               Text(
                 'Material',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-
               Container(
                 width: Get.width * 0.45,
-                child: Text('Rose Gold, Titanium',
+                child: Text(
+                  'Rose Gold, Titanium',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.end,
                   style: TextStyle(
-                      fontSize: 15,
-
-                  ),),
+                    fontSize: 15,
+                  ),
+                ),
               ),
             ],
           ),
@@ -471,8 +463,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ],
                         ),
                       ),
-                    ]
-                ),
+                    ]),
               );
             },
           ),
@@ -493,8 +484,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 textScaleFactor: 1.1,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline
-                ),
+                    decoration: TextDecoration.underline),
               ),
             ),
             SizedBox(width: 20),
@@ -502,12 +492,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               onTap: () {
                 print('Clicked On Add Comment');
               },
-              child: Text('Add Comment',
+              child: Text(
+                'Add Comment',
                 textScaleFactor: 1.1,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline
-                ),
+                    decoration: TextDecoration.underline),
               ),
             ),
           ],
@@ -516,5 +506,4 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
     );
   }
-
 }
