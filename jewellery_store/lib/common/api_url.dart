@@ -13,4 +13,5 @@ class ApiUrl {
   static const UserCartApi = ApiMainPath + 'api/usercart';
   static const AddCartQtyApi = ApiMainPath + 'api/addcartqty';
   static const DeleteCartProductApi = ApiMainPath + 'api/deletecart';
+  static const FeaturedProductApi = ApiMainPath + 'api/productfeatured';
 }

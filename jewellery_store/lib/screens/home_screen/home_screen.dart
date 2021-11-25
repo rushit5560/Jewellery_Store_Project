@@ -9,7 +9,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:jewellery_store/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:jewellery_store/screens/category_screen/category_screen.dart';
 import 'package:jewellery_store/screens/product_detail_screen/product_detail_screen.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../models/home_screen_model/homelist_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,15 +18,9 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 class _HomeScreenState extends State<HomeScreen> {
-
   HomeScreenController homeScreenController = Get.put(HomeScreenController());
 
-  // int activeIndex = 0;
-  // final imgList = [
-  //   ImageUrl.banner1,
-  //   ImageUrl.banner2,
-  //   ImageUrl.banner3,
-  // ];
+
   final mainCategoryImg = [
     ImageUrl.mainlist1,
     ImageUrl.mainlist2,
@@ -245,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return ListView.builder(
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
-      itemCount: homeProductItems.length,
+      itemCount: homeScreenController.featuredProductLists.length,
       itemBuilder: (context, index) => index % 2 == 0
           ? Padding(
               padding: const EdgeInsets.all(8.0),
@@ -262,7 +255,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           image: DecorationImage(
-                            image: AssetImage(homeProductItems[index].imgUrl),
+                            image: NetworkImage(
+                                ApiUrl.ApiMainPath + "${homeScreenController.featuredProductLists[index].showimg}",
+                            ),
                             fit: BoxFit.cover,
                           )),
                     ),
@@ -273,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              homeProductItems[index].title,
+                              homeScreenController.featuredProductLists[index].productname,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -306,14 +301,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: [
                                 Text(
-                                  '\$${homeProductItems[index].activePrice}',
+                                  '\$${homeScreenController.featuredProductLists[index].productcost}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 SizedBox(width: 10),
                                 Text(
-                                  '\$${homeProductItems[index].activePrice}',
+                                  '\$${homeScreenController.featuredProductLists[index].productcost}',
                                   style: TextStyle(
                                     decoration: TextDecoration.lineThrough,
                                   ),
