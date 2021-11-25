@@ -184,22 +184,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Widget carouselIndicator() {
-  //   return Obx(
-  //     ()=> AnimatedSmoothIndicator(
-  //       activeIndex: homeScreenController.activeIndex.value,
-  //       count: homeScreenController.bannerLists.length,
-  //       axisDirection: Axis.vertical,
-  //       effect: WormEffect(
-  //         dotHeight: 11,
-  //         dotWidth: 11,
-  //         activeDotColor: CustomColor.kTealColor,
-  //         dotColor: Colors.white,
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget carouselIndicator() {
     return Obx(
           () => Column(
@@ -267,8 +251,8 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(() => ProductDetailScreen());
-                  print('Clicked    1');
+                  // Get.to(() => ProductDetailScreen());
+
                 },
                 child: Row(
                   children: [

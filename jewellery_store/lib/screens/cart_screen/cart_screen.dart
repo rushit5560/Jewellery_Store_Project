@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:jewellery_store/common/api_url.dart';
+import 'package:jewellery_store/common/common_widgets.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:get/get.dart';
 import 'package:jewellery_store/controller/cart_screen_controller/cart_screen_controller.dart';
@@ -12,7 +12,6 @@ class CartScreen extends StatefulWidget {
   @override
   _CartScreenState createState() => _CartScreenState();
 }
-
 class _CartScreenState extends State<CartScreen> {
   CartScreenController cartScreenController = Get.put(CartScreenController());
 
@@ -24,24 +23,28 @@ class _CartScreenState extends State<CartScreen> {
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            cartItemsList(),
-            SizedBox(height: 20),
-            couponCodeField(),
-            SizedBox(height: 20),
-            subTotal(),
-            shipping(),
-            discount(),
-            total(),
-            SizedBox(height: 20),
-            checkoutButton(),
-            SizedBox(height: 20),
-          ],
-        ),
+      body: Obx(
+        () => cartScreenController.isLoading.value
+            ? customCircularProgressIndicator()
+            : SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    cartItemsList(),
+                    SizedBox(height: 20),
+                    couponCodeField(),
+                    SizedBox(height: 20),
+                    subTotal(),
+                    shipping(),
+                    discount(),
+                    total(),
+                    SizedBox(height: 20),
+                    checkoutButton(),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ),
       ),
     );
   }
@@ -78,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       image: DecorationImage(
                                         image: NetworkImage(
-                                            ApiUrl.ApiMainPath + "${cartScreenController.userCartProductLists[index].showimg}"
+                                            ApiUrl.ApiMainPath + "asset/uploads/product/" + "${cartScreenController.userCartProductLists[index].showimg}"
                                         ),
                                         fit: BoxFit.cover,
                                       )),
@@ -121,6 +124,49 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                     SizedBox(height: 5),
                                     Container(
+                                      child: Row(
+                                        children: [
+
+                                          GestureDetector(
+                                            onTap: () {
+                                              if(cartScreenController.userCartProductLists[index].cquantity > 1) {
+                                                int cartQty = cartScreenController.userCartProductLists[index].cquantity;
+                                                int cartQtyDec = cartQty - 1;
+                                                print('cquantity -- : $cartQtyDec');
+                                                cartScreenController.getAddProductCartQty(cartQtyDec, cartScreenController.userCartProductLists[index].cartDetailId);
+                                                cartScreenController.getUserDetailsFromPrefs();
+                                              }
+                                            },
+                                            child: Icon(
+                                              Icons.remove,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 3),
+
+                                          Text(
+                                            '${cartScreenController.userCartProductLists[index].cquantity}',
+                                            textScaleFactor: 1.1,
+                                          ),
+
+                                          const SizedBox(width: 3),
+                                          GestureDetector(
+                                            onTap: () {
+                                              int cartQty = cartScreenController.userCartProductLists[index].cquantity;
+                                              int cartQtyInc = cartQty + 1;
+                                              print('cquantity ++ : $cartQtyInc');
+                                              cartScreenController.getAddProductCartQty(cartQtyInc, cartScreenController.userCartProductLists[index].cartDetailId);
+                                              cartScreenController.getUserDetailsFromPrefs();
+                                              },
+                                            child: Icon(
+                                              Icons.add_rounded,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    /*Container(
                                       width: 50,
                                       height: 22,
                                       child: TextFormField(
@@ -148,7 +194,7 @@ class _CartScreenState extends State<CartScreen> {
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                               ),
@@ -238,7 +284,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               Text(
-                '\$400.00',
+                '\$${cartScreenController.userCartTotalAmount}',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.white,
@@ -332,7 +378,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               Text(
-                '\$450.00',
+                '\$${cartScreenController.userCartTotalAmount}',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.white,
