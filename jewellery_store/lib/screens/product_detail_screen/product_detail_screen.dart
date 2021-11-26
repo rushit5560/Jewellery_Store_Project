@@ -23,6 +23,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   bool viewMoreValue = false;
   int? activeColor;
+  TextEditingController commentFieldController = TextEditingController();
 
   List<ReviewInfo> reviewList = [
     ReviewInfo(
@@ -491,6 +492,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             GestureDetector(
               onTap: () {
                 print('Clicked On Add Comment');
+                productDetailScreenController.addReview.value = !productDetailScreenController.addReview.value;
               },
               child: Text(
                 'Add Comment',
@@ -500,10 +502,103 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     decoration: TextDecoration.underline),
               ),
             ),
+
+
           ],
         ),
         SizedBox(height: 10),
+        Visibility(
+          visible: productDetailScreenController.addReview.value,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RatingBar.builder(
+                itemCount: 5,
+                // ignoreGestures: true,
+                unratedColor: CustomColor.kLightOrangeColor,
+                allowHalfRating: true,
+                itemSize: 20,
+                // minRating: 1,
+                glow: false,
+                initialRating: 0,
+                itemBuilder: (context, _) {
+                  return Icon(
+                    Icons.star_rounded,
+                    color: CustomColor.kOrangeColor,
+                  );
+                },
+                onRatingUpdate: (rating) {
+                  productDetailScreenController.reviewRating = rating;
+                },
+              ),
+              const SizedBox(height: 5),
+              TextFormField(
+                controller: commentFieldController,
+                maxLines: 2,
+                decoration: inputDecoration(),
+                validator: (value){
+                  if(value!.isEmpty){
+                    return "Comment Field not Empty";
+                  }
+                },
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: GestureDetector(
+                  onTap: () {
+                    productDetailScreenController.addProductReview(
+                        "${productDetailScreenController.reviewRating}",
+                    "${commentFieldController.text.trim()}");
+                    commentFieldController.clear();
+                    productDetailScreenController.addReview.value = !productDetailScreenController.addReview.value;
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35),
+                      color: CustomColor.kTealColor,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 10),
       ],
+    );
+  }
+
+  InputDecoration inputDecoration() {
+    return InputDecoration(
+      isDense: true,
+      contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      hintText: 'Comment',
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
     );
   }
 }

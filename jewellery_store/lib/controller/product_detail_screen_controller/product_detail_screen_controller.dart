@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:jewellery_store/common/api_url.dart';
 import 'package:jewellery_store/models/product_add_to_cart_model/addtocart_model.dart';
+import 'package:jewellery_store/models/product_detail_screen_model/add_product_review_model.dart';
 import 'package:jewellery_store/models/product_detail_screen_model/product_detail_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +15,8 @@ class ProductDetailScreenController extends GetxController {
   RxBool isStatus = false.obs;
   RxList<Datum> productDetailLists = RxList();
   RxInt activeIndex = 0.obs;
+  double reviewRating = 0;
+  RxBool addReview = false.obs;
 
   var userId;
 
@@ -86,6 +90,36 @@ class ProductDetailScreenController extends GetxController {
 
     } catch(e){
       print('Product Review Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  addProductReview(ratings, comment) async {
+    isLoading(true);
+    String url = ApiUrl.AddProductReviewApi;
+    print('Url : $url');
+    print('productId : $productId');
+
+    try{
+      Map data = {
+        "userid": "$userId",
+        "productid": "$productId",
+        "ratings": "$ratings",
+        "comment": "$comment"
+      };
+
+      http.Response response = await http.post(Uri.parse(url), body: data);
+      AddProductReviewData addProductReviewData = AddProductReviewData.fromJson(json.decode(response.body));
+      isStatus = addProductReviewData.success.obs;
+
+      if(isStatus.value){
+        Fluttertoast.showToast(msg: "${addProductReviewData.message.toString()}");
+      } else {
+        print('Else False');
+      }
+    } catch(e) {
+      print('Add Product Review False');
     } finally {
       isLoading(false);
     }

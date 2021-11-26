@@ -609,6 +609,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String? username, emailid, phoneno, addres, password;
   Gender? jati;
+
   Widget alertUpdateButton() {
     username = alertUserNameController.text.trim();
     emailid = alertEmailIdController.text.trim();
@@ -647,7 +648,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
@@ -679,7 +679,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
     );
   }
-
   Future camera() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
@@ -691,7 +690,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     });
   }
-
   Future gallery() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
