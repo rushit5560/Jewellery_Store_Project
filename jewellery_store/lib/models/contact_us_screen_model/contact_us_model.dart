@@ -14,8 +14,8 @@ class ContactUsData {
   String message;
 
   factory ContactUsData.fromJson(Map<String, dynamic> json) => ContactUsData(
-    success: json["success"],
-    message: json["message"],
+    success: json["success"] == null ? false : json["success"],
+    message: json["message"] == null ? "" : json["message"],
   );
 
   Map<String, dynamic> toJson() => {

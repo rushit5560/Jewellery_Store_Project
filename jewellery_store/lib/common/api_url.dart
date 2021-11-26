@@ -16,4 +16,6 @@ class ApiUrl {
   static const ProductReviewApi = ApiMainPath + 'api/reviewget';
   static const AddProductReviewApi = ApiMainPath + 'api/reviewadd';
   static const UserProfileApi = ApiMainPath + 'api/userprofile';
+  static const ContactUsApi = ApiMainPath + 'api/contactus';
+  static const ChangePasswordApi = ApiMainPath + 'api/changepassword';
 }

@@ -1,14 +1,18 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jewellery_store/common/common_widgets.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jewellery_store/controller/contact_us_screen__controller/contact_us_screen__controller.dart';
 
 class ContactUsScreen extends StatelessWidget {
 
+  ContactUsScreenController contactUsScreenController = Get.put(ContactUsScreenController());
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
+  TextEditingController phoneNoController = TextEditingController();
   TextEditingController emailIdController = TextEditingController();
   TextEditingController subjectController = TextEditingController();
   TextEditingController commentController = TextEditingController();
@@ -22,35 +26,41 @@ class ContactUsScreen extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              map(),
-              SizedBox(height: 20),
-              Container(
-                child: Form(
-                  key: formKey,
+      body: Obx(
+        () => contactUsScreenController.isLoading.value
+            ? customCircularProgressIndicator()
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      fullNameField(),
-                      SizedBox(height: 25),
-                      emailIdField(),
-                      SizedBox(height: 25),
-                      subjectField(),
-                      SizedBox(height: 25),
-                      commentField(),
-                      SizedBox(height: 25),
-                      submitButton(),
+                      map(),
                       SizedBox(height: 20),
+                      Container(
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            children: [
+                              fullNameField(),
+                              SizedBox(height: 25),
+                              emailIdField(),
+                              SizedBox(height: 25),
+                              phoneNoField(),
+                              SizedBox(height: 25),
+                              subjectField(),
+                              SizedBox(height: 25),
+                              commentField(),
+                              SizedBox(height: 25),
+                              submitButton(),
+                              SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -94,21 +104,45 @@ class ContactUsScreen extends StatelessWidget {
           ),
           SizedBox(height: 5),
           TextFormField(
-            cursorColor: CustomColor.kTealColor,
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25)),
-            ),
             controller: nameController,
+            cursorColor: CustomColor.kTealColor,
             validator: (value) {
-              if (value!.isEmpty /* || value.length == null*/) {
+              if (value!.isEmpty) {
                 return "Name cannot be empty";
               }
             },
+            decoration: inputDecoration(0),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget phoneNoField() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Phone No',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 5),
+          TextFormField(
+            controller: phoneNoController,
+            cursorColor: CustomColor.kTealColor,
+            keyboardType: TextInputType.number,
+            maxLength: 10,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Phone Number cannot be empty";
+              } else if(value.length != 10){
+                return "Phone Number must be 10 Digit";
+              }
+            },
+            decoration: inputDecoration(0),
           )
         ],
       ),
@@ -129,19 +163,12 @@ class ContactUsScreen extends StatelessWidget {
           SizedBox(height: 5),
           TextFormField(
             cursorColor: CustomColor.kTealColor,
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25)),
-            ),
+            decoration: inputDecoration(0),
             controller: emailIdController,
             validator: (value) {
               if (value!.isEmpty /* || value.length == null*/) {
                 return "Email cannot be empty";
-              } else if(!value.contains('a')){
+              } else if(!value.contains('@')){
                 return 'Email Should be valid';
               }
             },
@@ -165,14 +192,7 @@ class ContactUsScreen extends StatelessWidget {
           SizedBox(height: 5),
           TextFormField(
             cursorColor: CustomColor.kTealColor,
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25)),
-            ),
+            decoration: inputDecoration(0),
             controller: subjectController,
             validator: (value) {
               if (value!.isEmpty /* || value.length == null*/) {
@@ -200,14 +220,7 @@ class ContactUsScreen extends StatelessWidget {
           TextFormField(
             cursorColor: CustomColor.kTealColor,
             maxLines: 4,
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(15)),
-            ),
+            decoration: inputDecoration(1),
             controller: commentController,
             validator: (value) {
               if (value!.isEmpty) {
@@ -221,14 +234,16 @@ class ContactUsScreen extends StatelessWidget {
   }
 
   Widget submitButton() {
-
     return Container(
-      // padding: EdgeInsets.symmetric(horizontal: 15),
       child: GestureDetector(
         onTap: () {
-          print('Clicked On Submit Button');
           if (formKey.currentState!.validate()) {
-            print('Inside formkey');
+            contactUsScreenController.getContactUsData(
+                '${nameController.text.trim()}',
+                '${emailIdController.text.trim().toLowerCase()}',
+                '${phoneNoController.text.trim()}',
+                '${subjectController.text.trim()}',
+                '${commentController.text.trim()}');
           }
         },
         child: Container(
@@ -248,6 +263,31 @@ class ContactUsScreen extends StatelessWidget {
                 ),
               )),
         ),
+      ),
+    );
+  }
+
+
+  InputDecoration inputDecoration(index) {
+    return InputDecoration(
+      isDense: true,
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      counterText: '',
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(index == 0 ? 25 : 10),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(index == 0 ? 25 : 10),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(index == 0 ? 25 : 10),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(index == 0 ? 25 : 10),
       ),
     );
   }
