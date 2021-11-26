@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jewellery_store/common/common_widgets.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:jewellery_store/common/image_url.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jewellery_store/controller/profile_screen_controller/profile_screen_controller.dart';
 import 'package:jewellery_store/screens/cart_screen/cart_screen.dart';
 import 'package:jewellery_store/screens/order_screen/order_screen.dart';
 import 'package:jewellery_store/screens/settings_screen/settings_screen.dart';
@@ -18,13 +20,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  ProfileScreenController profileScreenController = Get.put(ProfileScreenController());
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController alertUserNameController = TextEditingController();
-  TextEditingController alertEmailIdController = TextEditingController();
-  TextEditingController alertPhoneNoController = TextEditingController();
-  TextEditingController alertAddressController = TextEditingController();
-  TextEditingController alertPasswordController = TextEditingController();
-  Gender? _gender = Gender.male;
+  TextEditingController alertCountryController = TextEditingController();
+  TextEditingController alertStateController = TextEditingController();
+  TextEditingController alertCityController = TextEditingController();
+
+  // TextEditingController alertEmailIdController = TextEditingController();
+  // TextEditingController alertPhoneNoController = TextEditingController();
+  // TextEditingController alertAddressController = TextEditingController();
+  // TextEditingController alertPasswordController = TextEditingController();
+  // Gender? _gender = Gender.male;
   final picker = ImagePicker();
   File? _image;
 
@@ -37,37 +45,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                editProfileButton(context),
-                SizedBox(height: 10),
-                profileNameEmail(context),
-                SizedBox(height: 30),
-                userName(),
-                SizedBox(height: 20),
-                emailId(),
-                SizedBox(height: 20),
-                phoneNo(),
-                SizedBox(height: 20),
-                address(),
-                SizedBox(height: 20),
-                gender(),
-                SizedBox(height: 10),
-                myOrder(),
-                SizedBox(height: 10),
-                cart(),
-                SizedBox(height: 10),
-                settings(),
-                SizedBox(height: 10),
-                // alertRadioButton(),
-              ],
-            ),
-          ),
-        ),
+      body: Obx(
+        () => profileScreenController.isLoading.value
+            ? customCircularProgressIndicator()
+            : SingleChildScrollView(
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        editProfileButton(context),
+                        SizedBox(height: 10),
+                        profileNameEmail(context),
+                        SizedBox(height: 30),
+                        userName(),
+                        SizedBox(height: 20),
+                        emailId(),
+                        SizedBox(height: 20),
+                        phoneNo(),
+                        SizedBox(height: 20),
+                        address(),
+                        SizedBox(height: 20),
+                        gender(),
+                        SizedBox(height: 10),
+                        myOrder(),
+                        SizedBox(height: 10),
+                        cart(),
+                        SizedBox(height: 10),
+                        settings(),
+                        SizedBox(height: 10),
+                        // alertRadioButton(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
       ),
     );
   }
@@ -395,6 +407,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Edit Profile Dialog Box
   editAccountDetails(BuildContext context) {
     return showDialog(
         context: context,
@@ -423,15 +436,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           SizedBox(height: 5),
                           alertDialogUserNameField(),
                           SizedBox(height: 5),
-                          alertDialogEmailIdField(),
+                          alertDialogCountryField(),
+                          // alertDialogEmailIdField(),
                           SizedBox(height: 5),
-                          alertDialogPhoneNoField(),
+                          alertDialogStateField(),
+                          // alertDialogPhoneNoField(),
                           SizedBox(height: 5),
-                          alertDialogAddressField(),
+                          alertDialogCityField(),
+                          // alertDialogAddressField(),
                           SizedBox(height: 5),
-                          alertRadioButton(setState2),
+                          // alertRadioButton(setState2),
                           SizedBox(height: 5),
-                          alertDialogPasswordField(),
+                          // alertDialogPasswordField(),
                           SizedBox(height: 15),
                           alertUpdateButton(),
                         ],
@@ -444,63 +460,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
   }
 
-  Widget alertRadioButton(setState2) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Container(
-          child: Row(
-            children: [
-              Radio(
-                  value: Gender.male,
-                  groupValue: _gender,
-                  onChanged: (Gender? val){
-                    setState2(() {
-                      print('--Male Clicked--');
-                      _gender = val!;
-                      print(_gender);
-                    });
-                  },
-              ),
-              SizedBox(width: 5),
-              Text(
-                  'Male',
-                style: TextStyle(
-                  color: Colors.black
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(width: 10),
-        Container(
-          child: Row(
-            children: [
-              Radio(
-                value: Gender.female,
-                groupValue: _gender,
-                onChanged: (Gender? val){
-                  setState2(() {
-                    print('-----Female Clicked-----');
-                    _gender = val!;
-                    print(_gender);
-
-                  });
-                },
-              ),
-              SizedBox(width: 5),
-              Text(
-                'Female',
-                style: TextStyle(
-                    color: Colors.black
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget alertRadioButton(setState2) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.start,
+  //     children: [
+  //       Container(
+  //         child: Row(
+  //           children: [
+  //             Radio(
+  //                 value: Gender.male,
+  //                 groupValue: _gender,
+  //                 onChanged: (Gender? val){
+  //                   setState2(() {
+  //                     print('--Male Clicked--');
+  //                     _gender = val!;
+  //                     print(_gender);
+  //                   });
+  //                 },
+  //             ),
+  //             SizedBox(width: 5),
+  //             Text(
+  //                 'Male',
+  //               style: TextStyle(
+  //                 color: Colors.black
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       SizedBox(width: 10),
+  //       Container(
+  //         child: Row(
+  //           children: [
+  //             Radio(
+  //               value: Gender.female,
+  //               groupValue: _gender,
+  //               onChanged: (Gender? val){
+  //                 setState2(() {
+  //                   print('-----Female Clicked-----');
+  //                   _gender = val!;
+  //                   print(_gender);
+  //
+  //                 });
+  //               },
+  //             ),
+  //             SizedBox(width: 5),
+  //             Text(
+  //               'Female',
+  //               style: TextStyle(
+  //                   color: Colors.black
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget alertDialogUserNameField() {
     return TextFormField(
@@ -521,21 +537,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget alertDialogEmailIdField() {
+  Widget alertDialogCountryField() {
     return TextFormField(
       cursorColor: Colors.black,
       style: TextStyle(color: Colors.black),
-      controller: alertEmailIdController,
-      keyboardType: TextInputType.emailAddress,
+      controller: alertCountryController,
       validator: (value) {
         if(value!.isEmpty){
-          return 'Email Id Should not be Empty';
-        } else if (!value.contains('@')){
-          return 'Enter Valid Email Id';
+          return 'Country Should not be Empty';
         }
       },
       decoration: InputDecoration(
-        hintText: 'Email Id',
+        hintText: 'Country',
         hintStyle: TextStyle(color: Colors.grey),
         focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
         enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
@@ -543,24 +556,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget alertDialogPhoneNoField() {
+  Widget alertDialogStateField() {
     return TextFormField(
       cursorColor: Colors.black,
       style: TextStyle(color: Colors.black),
-      maxLength: 10,
-      keyboardType: TextInputType.number,
-      controller: alertPhoneNoController,
+      controller: alertStateController,
       validator: (value) {
         if(value!.isEmpty){
-          return 'Phone No. Should not be Empty';
-        }
-        else if (value.length != 10) {
-          return 'Phone No. Must be 10 Digit';
+          return 'State Should not be Empty';
         }
       },
       decoration: InputDecoration(
-        hintText: 'Phone No.',
-        counterText: '',
+        hintText: 'State',
         hintStyle: TextStyle(color: Colors.grey),
         focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
         enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
@@ -568,18 +575,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget alertDialogAddressField() {
+  Widget alertDialogCityField() {
     return TextFormField(
       cursorColor: Colors.black,
       style: TextStyle(color: Colors.black),
-      controller: alertAddressController,
+      controller: alertCityController,
       validator: (value) {
         if(value!.isEmpty){
-          return 'Address Should not be Empty';
+          return 'City Should not be Empty';
         }
       },
       decoration: InputDecoration(
-        hintText: 'Address',
+        hintText: 'City',
         hintStyle: TextStyle(color: Colors.grey),
         focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
         enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
@@ -587,44 +594,114 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget alertDialogPasswordField() {
-    return TextFormField(
-      cursorColor: Colors.black,
-      // obscureText: true,
-      style: TextStyle(color: Colors.black),
-      controller: alertPasswordController,
-      validator: (value) {
-        if(value!.isEmpty){
-          return 'Password Should not be Empty';
-        }
-      },
-      decoration: InputDecoration(
-        hintText: 'Password',
-        hintStyle: TextStyle(color: Colors.grey),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
-      ),
-    );
-  }
 
-  String? username, emailid, phoneno, addres, password;
-  Gender? jati;
+  // Widget alertDialogEmailIdField() {
+  //   return TextFormField(
+  //     cursorColor: Colors.black,
+  //     style: TextStyle(color: Colors.black),
+  //     controller: alertEmailIdController,
+  //     keyboardType: TextInputType.emailAddress,
+  //     validator: (value) {
+  //       if(value!.isEmpty){
+  //         return 'Email Id Should not be Empty';
+  //       } else if (!value.contains('@')){
+  //         return 'Enter Valid Email Id';
+  //       }
+  //     },
+  //     decoration: InputDecoration(
+  //       hintText: 'Email Id',
+  //       hintStyle: TextStyle(color: Colors.grey),
+  //       focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //       enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //     ),
+  //   );
+  // }
+
+  // Widget alertDialogPhoneNoField() {
+  //   return TextFormField(
+  //     cursorColor: Colors.black,
+  //     style: TextStyle(color: Colors.black),
+  //     maxLength: 10,
+  //     keyboardType: TextInputType.number,
+  //     controller: alertPhoneNoController,
+  //     validator: (value) {
+  //       if(value!.isEmpty){
+  //         return 'Phone No. Should not be Empty';
+  //       }
+  //       else if (value.length != 10) {
+  //         return 'Phone No. Must be 10 Digit';
+  //       }
+  //     },
+  //     decoration: InputDecoration(
+  //       hintText: 'Phone No.',
+  //       counterText: '',
+  //       hintStyle: TextStyle(color: Colors.grey),
+  //       focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //       enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //     ),
+  //   );
+  // }
+
+  // Widget alertDialogAddressField() {
+  //   return TextFormField(
+  //     cursorColor: Colors.black,
+  //     style: TextStyle(color: Colors.black),
+  //     controller: alertAddressController,
+  //     validator: (value) {
+  //       if(value!.isEmpty){
+  //         return 'Address Should not be Empty';
+  //       }
+  //     },
+  //     decoration: InputDecoration(
+  //       hintText: 'Address',
+  //       hintStyle: TextStyle(color: Colors.grey),
+  //       focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //       enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //     ),
+  //   );
+  // }
+
+  // Widget alertDialogPasswordField() {
+  //   return TextFormField(
+  //     cursorColor: Colors.black,
+  //     // obscureText: true,
+  //     style: TextStyle(color: Colors.black),
+  //     controller: alertPasswordController,
+  //     validator: (value) {
+  //       if(value!.isEmpty){
+  //         return 'Password Should not be Empty';
+  //       }
+  //     },
+  //     decoration: InputDecoration(
+  //       hintText: 'Password',
+  //       hintStyle: TextStyle(color: Colors.grey),
+  //       focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //       enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //     ),
+  //   );
+  // }
+
+  // String? username, emailid, phoneno, addres, password;
+  // Gender? jati;
 
   Widget alertUpdateButton() {
-    username = alertUserNameController.text.trim();
-    emailid = alertEmailIdController.text.trim();
-    phoneno = alertPhoneNoController.text.trim();
-    jati = _gender;
-    addres = alertAddressController.text.trim();
-    password = alertPasswordController.text.trim();
+    // username = alertUserNameController.text.trim();
+    // emailid = alertEmailIdController.text.trim();
+    // phoneno = alertPhoneNoController.text.trim();
+    // jati = _gender;
+    // addres = alertAddressController.text.trim();
+    // password = alertPasswordController.text.trim();
 
     return Container(
       child: GestureDetector(
         onTap: () {
           if (formKey.currentState!.validate()) {
-            print('Inside formkey');
-            print(
-                '$username &&& $emailid &&& $phoneno &&& $jati &&& $addres &&& $password');
+            profileScreenController.updateUserProfile(
+              "${alertUserNameController.text.trim()}",
+              "${alertCountryController.text.trim()}",
+              "${alertStateController.text.trim()}",
+              "${alertCityController.text.trim()}",
+            );
           }
         },
         child: Container(
