@@ -5,6 +5,7 @@ import 'package:jewellery_store/common/common_widgets.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:jewellery_store/common/image_url.dart';
 import 'package:jewellery_store/controller/signin_screen_controller/signin_screen_controller.dart';
+import 'package:jewellery_store/screens/change_password_screen/change_password_screen.dart';
 import 'package:jewellery_store/screens/signup_screen/signup_screen.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -191,7 +192,9 @@ class SignInScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: GestureDetector(
-        onTap: () {print('Clicked On Forgot Password?');},
+        onTap: () {
+          Get.to(()=> ChangePasswordScreen());
+        },
         child: Text('Forgot Password?',
           style: TextStyle(
             decoration: TextDecoration.underline,
