@@ -24,7 +24,9 @@
 //   };
 // }
 
-
+// To parse this JSON data, do
+//
+//     final updateUserProfileData = updateUserProfileDataFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -42,12 +44,12 @@ class UpdateUserProfileData {
   String message;
 
   factory UpdateUserProfileData.fromJson(Map<String, dynamic> json) => UpdateUserProfileData(
-    success: json["success"],
-    message: json["message"],
+    success: json["success"] == null ? false : json["success"],
+    message: json["message"] == null ? "" : json["message"],
   );
 
   Map<String, dynamic> toJson() => {
-    "success": success,
-    "message": message,
+    "success": success ? false : success,
+    "message": message.isEmpty ? "" : message,
   };
 }

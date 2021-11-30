@@ -25,50 +25,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int? activeColor;
   TextEditingController commentFieldController = TextEditingController();
 
-  List<ReviewInfo> reviewList = [
-    ReviewInfo(
-      imgUrl: ImageUrl.profile,
-      userName: 'Tokyo',
-      stars: '4',
-      description:
-          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
-    ),
-    ReviewInfo(
-      imgUrl: ImageUrl.profile,
-      userName: 'Arturito',
-      stars: '4.5',
-      description:
-          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
-    ),
-    ReviewInfo(
-      imgUrl: ImageUrl.profile,
-      userName: 'Berline',
-      stars: '4.5',
-      description:
-          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
-    ),
-    ReviewInfo(
-      imgUrl: ImageUrl.profile,
-      userName: 'Neirobi',
-      stars: '4.5',
-      description:
-          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
-    ),
-    ReviewInfo(
-      imgUrl: ImageUrl.profile,
-      userName: 'Tokyo',
-      stars: '4',
-      description:
-          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
-    ),
-    ReviewInfo(
-      imgUrl: ImageUrl.profile,
-      userName: 'Tokyo',
-      stars: '4',
-      description:
-          'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
-    ),
-  ];
+  // List<ReviewInfo> reviewList = [
+  //   ReviewInfo(
+  //     imgUrl: ImageUrl.profile,
+  //     userName: 'Tokyo',
+  //     stars: '4',
+  //     description:
+  //         'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+  //   ),
+  //   ReviewInfo(
+  //     imgUrl: ImageUrl.profile,
+  //     userName: 'Arturito',
+  //     stars: '4.5',
+  //     description:
+  //         'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+  //   ),
+  //   ReviewInfo(
+  //     imgUrl: ImageUrl.profile,
+  //     userName: 'Berline',
+  //     stars: '4.5',
+  //     description:
+  //         'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+  //   ),
+  //   ReviewInfo(
+  //     imgUrl: ImageUrl.profile,
+  //     userName: 'Neirobi',
+  //     stars: '4.5',
+  //     description:
+  //         'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+  //   ),
+  //   ReviewInfo(
+  //     imgUrl: ImageUrl.profile,
+  //     userName: 'Tokyo',
+  //     stars: '4',
+  //     description:
+  //         'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+  //   ),
+  //   ReviewInfo(
+  //     imgUrl: ImageUrl.profile,
+  //     userName: 'Tokyo',
+  //     stars: '4',
+  //     description:
+  //         'Processor: AMD Ryzen 9 5900HS, 2.8 GHz Base Speed, Up to 4.6 GHz TurboBoost Speed, 8 Cores, 16 Threads, 20M Cache Display: 35.56 cm (14-inch) WQHD (2560 x 1440) 16:9 LED-Backlit LCD',
+  //   ),
+  // ];
 
   List<Color> colorList = [
     Colors.blue,
@@ -122,7 +122,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget carouselSlider() {
     return CarouselSlider.builder(
-      itemCount: productDetailScreenController.productDetailLists.length,
+      itemCount: productDetailScreenController.productDetailLists[0].images.length,
       itemBuilder: (context, index, realIndex) {
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 5),
@@ -410,7 +410,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       children: [
         Container(
           child: ListView.builder(
-            itemCount: viewMoreValue ? reviewList.length : 3,
+            itemCount: viewMoreValue ? productDetailScreenController.productReviewList.length : 3,
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
@@ -419,20 +419,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        child: CircleAvatar(
-                          radius: 25,
-                          child: Image(
-                            image: AssetImage(reviewList[index].imgUrl),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10),
+                      // Container(
+                      //   child: CircleAvatar(
+                      //     radius: 25,
+                      //     child: Image(
+                      //       image: NetworkImage(productDetailScreenController.productReviewList[index].),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(reviewList[index].userName),
+                            Text(productDetailScreenController.productReviewList[index].username),
                             SizedBox(height: 2),
                             Container(
                               child: RatingBar.builder(
@@ -443,7 +443,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 itemSize: 15,
                                 minRating: 1,
                                 glow: false,
-                                // initialRating: 3,
+                                initialRating: double.parse("${productDetailScreenController.productReviewList[index].ratings}"),
                                 itemBuilder: (context, _) {
                                   return Icon(
                                     Icons.star_rounded,
@@ -457,7 +457,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                             SizedBox(height: 2),
                             Text(
-                              reviewList[index].description,
+                              productDetailScreenController.productReviewList[index].comment,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),

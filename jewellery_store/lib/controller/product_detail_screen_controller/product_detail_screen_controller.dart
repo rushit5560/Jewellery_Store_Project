@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:jewellery_store/common/api_url.dart';
 import 'package:jewellery_store/models/product_add_to_cart_model/addtocart_model.dart';
 import 'package:jewellery_store/models/product_detail_screen_model/add_product_review_model.dart';
+import 'package:jewellery_store/models/product_detail_screen_model/get_product_review_model.dart';
 import 'package:jewellery_store/models/product_detail_screen_model/product_detail_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,7 @@ class ProductDetailScreenController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isStatus = false.obs;
   RxList<Datum> productDetailLists = RxList();
+  RxList<Datum1> productReviewList = RxList();
   RxInt activeIndex = 0.obs;
   double reviewRating = 0;
   RxBool addReview = false.obs;
@@ -47,6 +49,7 @@ class ProductDetailScreenController extends GetxController {
     } finally {
       isLoading(false);
     }
+    getProductReview();
   }
 
   productAddToCart() async {
@@ -87,7 +90,20 @@ class ProductDetailScreenController extends GetxController {
     print('Url : $url');
 
     try{
+      Map data = {
+        "productid": "$productId"
+      };
+      print('data : $data');
+      http.Response response = await http.post(Uri.parse(url), body: data);
+      ProductReviewData productReviewData = ProductReviewData.fromJson(json.decode(response.body));
 
+      isStatus = productReviewData.success.obs;
+
+      if(isStatus.value){
+        productReviewList = productReviewData.data.obs;
+      } else {
+        print('Product Review False False');
+      }
     } catch(e){
       print('Product Review Error : $e');
     } finally {
