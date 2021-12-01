@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jewellery_store/common/custom_color.dart';
-import 'package:jewellery_store/screens/splash_screen/splash_screen.dart';
-import 'package:jewellery_store/zzz_extra_screen.dart';
+import 'package:jewellery_store/screens/index_screen/index_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      home: ExtraScreen(),
+      home: IndexScreen(),
     );
   }
 }

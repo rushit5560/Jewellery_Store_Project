@@ -18,4 +18,8 @@ class ApiUrl {
   static const UpdateUserProfileApi = ApiMainPath + 'api/userprofile';
   static const ContactUsApi = ApiMainPath + 'api/contactus';
   static const ChangePasswordApi = ApiMainPath + 'api/changepassword';
+
+  static const CountryApi = ApiMainPath + 'api/country';
+  static const StateApi = ApiMainPath + 'api/states';
+  static const CityApi = ApiMainPath + 'api/city';
 }

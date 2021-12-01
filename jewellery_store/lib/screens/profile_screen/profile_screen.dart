@@ -6,7 +6,11 @@ import 'package:jewellery_store/common/common_widgets.dart';
 import 'package:jewellery_store/common/custom_color.dart';
 import 'package:jewellery_store/common/image_url.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jewellery_store/controller/edit_profile_screen_controller/edit_profile_screen_controller.dart';
 import 'package:jewellery_store/controller/profile_screen_controller/profile_screen_controller.dart';
+import 'package:jewellery_store/models/edit_profile_screen_model/city_model.dart';
+import 'package:jewellery_store/models/edit_profile_screen_model/country_model.dart';
+import 'package:jewellery_store/models/edit_profile_screen_model/state_model.dart';
 import 'package:jewellery_store/screens/cart_screen/cart_screen.dart';
 import 'package:jewellery_store/screens/order_screen/order_screen.dart';
 import 'package:jewellery_store/screens/settings_screen/settings_screen.dart';
@@ -21,6 +25,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   ProfileScreenController profileScreenController = Get.put(ProfileScreenController());
+  EditProfileScreenController editProfileScreenController = Get.put(EditProfileScreenController());
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController alertUserNameController = TextEditingController();
@@ -412,50 +417,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
-          return StatefulBuilder(
-              builder: (context, setState2){
-                return AlertDialog(
-                  content: Form(
-                    key: formKey,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Edit Profile',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
+          return Obx(
+            () => editProfileScreenController.isLoading.value
+                ? customCircularProgressIndicator()
+                : StatefulBuilder(builder: (context, setState2) {
+                    return AlertDialog(
+                      content: Form(
+                        key: formKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Divider(
+                                thickness: 2,
+                                color: CustomColor.kTealColor,
+                              ),
+                              SizedBox(height: 5),
+                              alertDialogUserNameField(),
+                              SizedBox(height: 5),
+                              _countryDropDown(),
+                              // alertDialogCountryField(),
+                              // alertDialogEmailIdField(),
+                              SizedBox(height: 5),
+                              _stateDropDown(),
+                              // alertDialogStateField(),
+                              // alertDialogPhoneNoField(),
+                              SizedBox(height: 5),
+                              _cityDropDown(),
+                              // alertDialogCityField(),
+                              // alertDialogAddressField(),
+                              SizedBox(height: 5),
+                              // alertRadioButton(setState2),
+                              SizedBox(height: 5),
+                              // alertDialogPasswordField(),
+                              SizedBox(height: 15),
+                              alertUpdateButton(),
+                            ],
                           ),
-                          Divider(
-                            thickness: 2,
-                            color: CustomColor.kTealColor,
-                          ),
-                          SizedBox(height: 5),
-                          alertDialogUserNameField(),
-                          SizedBox(height: 5),
-                          alertDialogCountryField(),
-                          // alertDialogEmailIdField(),
-                          SizedBox(height: 5),
-                          alertDialogStateField(),
-                          // alertDialogPhoneNoField(),
-                          SizedBox(height: 5),
-                          alertDialogCityField(),
-                          // alertDialogAddressField(),
-                          SizedBox(height: 5),
-                          // alertRadioButton(setState2),
-                          SizedBox(height: 5),
-                          // alertDialogPasswordField(),
-                          SizedBox(height: 15),
-                          alertUpdateButton(),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              }
+                    );
+                  }),
           );
         });
   }
@@ -537,62 +547,176 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget alertDialogCountryField() {
-    return TextFormField(
-      cursorColor: Colors.black,
-      style: TextStyle(color: Colors.black),
-      controller: alertCountryController,
-      validator: (value) {
-        if(value!.isEmpty){
-          return 'Country Should not be Empty';
-        }
-      },
-      decoration: InputDecoration(
-        hintText: 'Country',
-        hintStyle: TextStyle(color: Colors.grey),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  Widget _countryDropDown() {
+    return Obx(
+          () => Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        width: Get.width,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(35),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: DropdownButton<Datum>(
+          value: editProfileScreenController.countryDropDownValue,
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
+          isExpanded: true,
+          underline: Container(
+            height: 1,
+            color: Colors.white,
+          ),
+          onChanged: (newValue) {
+            editProfileScreenController.countryDropDownValue!.name = newValue!.name;
+            editProfileScreenController.countryDropDownValue!.id = newValue.id;
+            print("countryDropDownValue : ${editProfileScreenController.countryDropDownValue!.name}");
+            print("countryDropDownValue ID : ${newValue.id}");
+            editProfileScreenController.getStateData(newValue.id);
+          },
+
+          items: editProfileScreenController.countryLists
+              .map<DropdownMenuItem<Datum>>((Datum value) {
+            return DropdownMenuItem<Datum>(
+              value: value,
+              child: Text(value.name),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
 
-  Widget alertDialogStateField() {
-    return TextFormField(
-      cursorColor: Colors.black,
-      style: TextStyle(color: Colors.black),
-      controller: alertStateController,
-      validator: (value) {
-        if(value!.isEmpty){
-          return 'State Should not be Empty';
-        }
-      },
-      decoration: InputDecoration(
-        hintText: 'State',
-        hintStyle: TextStyle(color: Colors.grey),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  Widget _stateDropDown() {
+    return Obx(
+          () => Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        width: Get.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(35),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: DropdownButton<DatumState>(
+          value: editProfileScreenController.stateDropDownValue,
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
+          isExpanded: true,
+          underline: Container(
+            height: 1,
+            color: Colors.white,
+          ),
+          onChanged: (newValue) {
+            editProfileScreenController.stateDropDownValue!.name = newValue!.name;
+            editProfileScreenController.stateDropDownValue!.id = newValue.id;
+            print("stateDropDownValue : ${editProfileScreenController.stateDropDownValue}");
+            print('newValue.name : ${newValue.name}');
+            editProfileScreenController.getCityData(newValue.id);
+            editProfileScreenController.loading();
+          },
+          items: editProfileScreenController.stateLists
+              .map<DropdownMenuItem<DatumState>>((DatumState value) {
+            return DropdownMenuItem<DatumState>(
+              value: value,
+              child: Text(value.name),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
 
-  Widget alertDialogCityField() {
-    return TextFormField(
-      cursorColor: Colors.black,
-      style: TextStyle(color: Colors.black),
-      controller: alertCityController,
-      validator: (value) {
-        if(value!.isEmpty){
-          return 'City Should not be Empty';
-        }
-      },
-      decoration: InputDecoration(
-        hintText: 'City',
-        hintStyle: TextStyle(color: Colors.grey),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  Widget _cityDropDown() {
+    return Obx(
+          () => Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        width: Get.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(35),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: DropdownButton<DatumCity>(
+          value: editProfileScreenController.cityDropDownValue,
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
+          isExpanded: true,
+          underline: Container(
+            height: 1,
+            color: Colors.white,
+          ),
+          onChanged: (newValue) {
+            editProfileScreenController.cityDropDownValue!.name = newValue!.name;
+            editProfileScreenController.cityDropDownValue!.id = newValue.id;
+            print("cityDropDownValue : ${editProfileScreenController.cityDropDownValue}");
+            print('newValue.name : ${newValue.name}');
+            editProfileScreenController.loading();
+          },
+          items: editProfileScreenController.cityLists
+              .map<DropdownMenuItem<DatumCity>>((DatumCity value) {
+            return DropdownMenuItem<DatumCity>(
+              value: value,
+              child: Text(value.name),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
+
+  // Widget alertDialogCountryField() {
+  //   return TextFormField(
+  //     cursorColor: Colors.black,
+  //     style: TextStyle(color: Colors.black),
+  //     controller: alertCountryController,
+  //     validator: (value) {
+  //       if(value!.isEmpty){
+  //         return 'Country Should not be Empty';
+  //       }
+  //     },
+  //     decoration: InputDecoration(
+  //       hintText: 'Country',
+  //       hintStyle: TextStyle(color: Colors.grey),
+  //       focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //       enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //     ),
+  //   );
+  // }
+  //
+  // Widget alertDialogStateField() {
+  //   return TextFormField(
+  //     cursorColor: Colors.black,
+  //     style: TextStyle(color: Colors.black),
+  //     controller: alertStateController,
+  //     validator: (value) {
+  //       if(value!.isEmpty){
+  //         return 'State Should not be Empty';
+  //       }
+  //     },
+  //     decoration: InputDecoration(
+  //       hintText: 'State',
+  //       hintStyle: TextStyle(color: Colors.grey),
+  //       focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //       enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //     ),
+  //   );
+  // }
+  //
+  // Widget alertDialogCityField() {
+  //   return TextFormField(
+  //     cursorColor: Colors.black,
+  //     style: TextStyle(color: Colors.black),
+  //     controller: alertCityController,
+  //     validator: (value) {
+  //       if(value!.isEmpty){
+  //         return 'City Should not be Empty';
+  //       }
+  //     },
+  //     decoration: InputDecoration(
+  //       hintText: 'City',
+  //       hintStyle: TextStyle(color: Colors.grey),
+  //       focusedBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //       enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+  //     ),
+  //   );
+  // }
 
 
   // Widget alertDialogEmailIdField() {
@@ -696,11 +820,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: GestureDetector(
         onTap: () {
           if (formKey.currentState!.validate()) {
-            profileScreenController.updateUserProfile(
-              "${alertUserNameController.text.trim()}",
-              "${alertCountryController.text.trim()}",
-              "${alertStateController.text.trim()}",
-              "${alertCityController.text.trim()}",
+            // profileScreenController.updateUserProfile(
+            //   "${alertUserNameController.text.trim()}",
+            //   "${alertCountryController.text.trim()}",
+            //   "${alertStateController.text.trim()}",
+            //   "${alertCityController.text.trim()}",
+            // );
+            editProfileScreenController.updateProfileData(
+                "${alertUserNameController.text.trim()}"
             );
           }
         },
