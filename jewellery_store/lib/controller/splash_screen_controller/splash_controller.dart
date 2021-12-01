@@ -22,8 +22,7 @@ class SplashController extends GetxController {
 
     if(onBoardingValue == true) {
       Get.off(()=> IndexScreen());
-    }
-    else/* if(onBoardingValue == false) */{
+    } else {
       Get.off(()=> OnBoardingScreen());
     }
   }
